@@ -1,0 +1,42 @@
+services:
+  frontend:
+    image: awesome/webapp
+    ports:
+      - "443:8043"
+    networks:
+      - front-tier
+      - back-tier
+    configs:
+      - httpd-config
+    {% if env.service_level == 'prd' %}
+    secrets:
+      - server-certificate
+    {% endif %}
+
+  backend:
+    image: awesome/database
+    volumes:
+      - db-data:/etc/data
+    networks:
+      - back-tier
+    environment:
+      - SUPER_SECRET_THING: {{ env.super_secret }}
+
+volumes:
+  db-data:
+    driver: flocker
+    driver_opts:
+      size: "10GiB"
+
+configs:
+  httpd-config:
+    external: true
+
+secrets:
+  server-certificate:
+    external: true
+
+networks:
+  # The presence of these objects is sufficient to define them
+  front-tier: {}
+  back-tier: {}

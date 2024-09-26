@@ -1,0 +1,13 @@
+[package]
+name = "rendro"
+version = "0.2.3"
+edition = "2021"
+authors = ["Michael Paul michael.paul38.ctr@mail.mil"]
+
+[dependencies]
+base64 = "0.21.0"
+minijinja = { version = "0.32.1", features = ["source"] }
+structopt = "0.3.26"
+
+[profile.release]
+opt-level = 3
