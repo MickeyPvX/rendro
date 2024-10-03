@@ -49,7 +49,7 @@ fn generate_outfile_path(file_name: &PathBuf, out_dir: &PathBuf) -> Result<PathB
 /// Renders Jinja templates in 'input_dir' using environment variables,
 /// saves the rendered templates to 'output_dir',
 /// and will only render the files with the matching file extension.
-pub fn render<'a>(
+pub fn render(
     input_dir: PathBuf,
     output_dir: PathBuf,
     file_extension: String,
