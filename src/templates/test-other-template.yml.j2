@@ -4,6 +4,6 @@ metadata:
   name: test-configmap
 data:
 
-  HOMEPATH: {{ env.homepath }}
-  PROCESSOR: {{ env.processor_identifier | b64encode }}
-  SYSTEMROOT: {{ env.systemroot | b64encode }}
+  HOME: {{ env.home }}
+  SSH_AGENT_PID: {{ env.ssh_agent_pid | b64encode }}
+  USER: {{ env.user | b64encode }}
