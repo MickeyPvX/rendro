@@ -5,7 +5,7 @@ use std::io::Write;
 use std::path::PathBuf;
 
 use base64::{engine::general_purpose, Engine};
-use minijinja::{context, Environment, Source};
+use minijinja::{context, Environment};
 
 /// Base64 encodes an input String
 fn base64_encode(input_str: String) -> String {
@@ -56,7 +56,6 @@ pub fn render(
 ) -> Result<(), Box<dyn std::error::Error>> {
     let mut env = Environment::new();
 
-    env.set_source(Source::from_path(&input_dir));
     env.add_filter("b64encode", base64_encode);
 
     let file_paths = get_file_paths(&input_dir)?;
@@ -77,10 +76,14 @@ pub fn render(
 
     for file_path in file_paths {
         let path = file_path?.path();
+        let template_name = path.file_name().unwrap().to_str().unwrap().to_owned();
 
         if !path.is_dir() && path.extension() == Some(OsStr::new(&file_extension)) {
+            env.add_template_owned(
+                template_name,
+                std::fs::read_to_string(&path)?,
+            )?;
             let file_out_path = generate_outfile_path(&path, &output_dir)?;
-
             let template = env.get_template(path.file_name().unwrap().to_str().unwrap())?;
 
             let mut file_out = match fs::File::create(&file_out_path) {
@@ -94,13 +97,10 @@ pub fn render(
             println!("Rendering {:?}...", path.file_name().unwrap());
 
             file_out.write_all(template.render(context! {env => env_hmap})?.as_bytes())?;
+
+            println!("Success!");
         }
     }
-
-    println!(
-        "Templates rendered successfully: {:?}",
-        env.source().unwrap()
-    );
 
     Ok(())
 }

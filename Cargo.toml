@@ -6,7 +6,7 @@ authors = ["Michael Paul michael.paul38.ctr@mail.mil"]
 
 [dependencies]
 base64 = "0.21.0"
-minijinja = { version = "0.32.1", features = ["source"] }
+minijinja = { version = "2.3.1", features = [ "loader" ] }
 structopt = "0.3.26"
 
 [profile.release]
